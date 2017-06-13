@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>P2P Chat</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/pure-min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <style>
+      .pure-g > div {
+        box-sizing: border-box;
+        padding: 0 1em;
+      }
+      #chat-form {
+        margin-bottom: 1em;
+      }
+      #messages {
+        max-height: 400px;
+        overflow-y: auto;
+      }
+      .message {
+        box-shadow: 0 4px 10px 0 rgba(0,0,0,0.2), 0 4px 20px 0 rgba(0,0,0,0.19);
+        margin-top: 1em;
+        margin-bottom: 1em;
+        padding: 0.5em 1em;
+      }
+      .my-message {
+        color: #fff;
+        background-color: #2196F3;
+      }
+      .their-message {
+        color: #fff;
+        background-color: #4CAF50;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="pure-g">
+      <div class="pure-u-1">
+        <h1>Chat</h1>
+      </div>
+    </div>
+
+    <div class="pure-g">
+      <div class="pure-u-1">
+        <form id="chat-form" class="pure-form">
+          <input id="chat-message" type="text" class="pure-input-rounded">
+          <button type="submit" class="pure-button">Send</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="pure-g">
+      <div id="messages" class="pure-u-1"></div>
+    </div>
+
+    <script>window.$ = window.jQuery = require('jquery')</script>
+    <script>
+      const {ipcRenderer} = require('electron')
+      const messages = $('#messages')
+      $(function() {
+        $('#chat-form').submit(function() {
+          let msg = $('#chat-message').val()
+          ipcRenderer.send('send message', msg)
+          messages.append(`<div class="message my-message">${msg}</div>`)
+          messages.animate({ scrollTop: messages.prop("scrollHeight")}, 500)
+          return false
+        })
+        ipcRenderer.on('receive message', (event, msg) => {
+          messages.append(`<div class="message their-message">${msg}</div>`)
+          messages.animate({ scrollTop: messages.prop("scrollHeight")}, 500)
+        })
+      })
+    </script>
+  </body>
+</html>

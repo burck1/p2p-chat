@@ -1,0 +1,23 @@
+{
+  "name": "p2p-chat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "Alex Burck <me@alexburck.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "devtron": "^1.4.0",
+    "electron": "~1.6.2"
+  },
+  "dependencies": {
+    "electron-debug": "^1.1.0",
+    "electron-is": "^2.4.0",
+    "jquery": "^3.2.1",
+    "socket.io": "^2.0.3",
+    "socket.io-client": "^2.0.3"
+  }
+}

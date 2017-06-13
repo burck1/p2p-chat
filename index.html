@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>P2P Chat</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/1.0.0/pure-min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <style>
+      .pure-g > div {
+        box-sizing: border-box;
+        padding: 0 1em;
+      }
+      h1 {
+        text-align: center;
+      }
+      h3 {
+
+      }
+      button {
+        width: 100%;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="pure-g">
+      <div class="pure-u-1">
+        <h1>Welcome to P2P Chat</h1>
+      </div>
+    </div>
+    <div class="pure-g">
+      <div class="pure-u-1-2">
+        <h3>Your IP</h3>
+        <p id="my-ip">0.0.0.0</p>
+      </div>
+      <div class="pure-u-1-2">
+        <h3>Your Port</h3>
+        <p id="my-port">0000</p>
+      </div>
+    </div>
+    <div class="pure-g">
+      <div class="pure-u-1">
+        <form id="connect-form" class="pure-form pure-form-stacked">
+          <fieldset>
+            <legend>Initiate Chat</legend>
+            <div class="pure-control-group">
+                <label for="connect-ip">IP Address</label>
+                <input id="connect-ip" class="pure-input-1" type="text" placeholder="IP Address" value="127.0.0.1">
+            </div>
+            <div class="pure-control-group">
+                <label for="connect-port">Port</label>
+                <input id="connect-port" class="pure-input-1" type="text" placeholder="Port" autofocus>
+            </div>
+            <button type="submit" class="pure-button pure-button-primary"><i class="fa fa-plug" aria-hidden="true"></i> Connect</button>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+
+    <script>window.$ = window.jQuery = require('jquery')</script>
+    <script>
+      const {ipcRenderer} = require('electron')
+      $(function() {
+        // when the document is ready, create the server connection
+        let result = ipcRenderer.sendSync('start server', true)
+        $('#my-ip').html(result.ip)
+        $('#my-port').html(result.port)
+
+        // when a user submits
+        // - attempt to connect to the corresponding server
+        // - then open a new chat window
+        $('#connect-form').submit(function(e) {
+          let req = {
+            ip: $('#connect-ip').val(),
+            port: $('#connect-port').val()
+          }
+          return ipcRenderer.sendSync('connect client', req)
+        })
+      })
+    </script>
+  </body>
+</html>
